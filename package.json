@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "deploy-list-nouns": "cd list-nouns && npm run compile && cd .. && sam.cmd deploy --config-file samconfig.toml"
+  },
   "dependencies": {
     "aws-sdk": "^2.1286.0"
   },
