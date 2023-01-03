@@ -1,10 +1,10 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
   deutsch-worterbuch
 
   Sample SAM Template for deutsch-worterbuch
-  
+
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
@@ -26,6 +26,25 @@ Resources:
           Properties:
             Path: /nouns
             Method: get
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref NounsTable
+
+  NounsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: WORTERBUCH
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -40,3 +59,7 @@ Outputs:
   ListNounsFunctionIamRole:
     Description: "Implicit IAM Role created for List Nouns function"
     Value: !GetAtt ListNounsFunctionRole.Arn
+
+  DynamoDBTable:
+    Description: "Table created to store the data related to Deutsch Worterbuch API"
+    Value: !Ref NounsTable
