@@ -8,10 +8,10 @@ const params = {
 
 export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
-    const data = await docClient.scan(params).promise()
+    const { Items } = await docClient.scan(params).promise()
     return {
       statusCode: 200,
-      body: JSON.stringify(data)
+      body: JSON.stringify(Items)
     }
   } catch (err) {
     console.error(`An error was thrown while reading the data: ${err}`)
