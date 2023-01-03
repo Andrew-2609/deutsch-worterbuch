@@ -1,7 +1,7 @@
 version = 0.1
-[dev]
-[dev.deploy]
-[dev.deploy.parameters]
+[default]
+[default.deploy]
+[default.deploy.parameters]
 stack_name = "deutsch-worterbuch"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-6z4tfn5i0tk7"
 s3_prefix = "deutsch-worterbuch"
