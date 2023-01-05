@@ -3,12 +3,12 @@ import { DynamoDB } from 'aws-sdk'
 
 const docClient = new DynamoDB.DocumentClient()
 
+const params: DynamoDB.DocumentClient.QueryInput = { TableName: 'WORTERBUCH', ProjectionExpression: 'noun, article, gender' }
+
 export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const params: DynamoDB.DocumentClient.QueryInput = { TableName: 'WORTERBUCH', ProjectionExpression: 'noun, article, gender' }
   const { queryStringParameters } = event
-  
-  if (queryStringParameters?.gender)
-    setGenderFromQueryStringParameters(params, queryStringParameters.gender)
+
+  setGenderToQueryInputIfPresent(params, queryStringParameters?.gender)
 
   try {
     const { Items } = await docClient.scan(params).promise()
@@ -25,12 +25,20 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
   }
 }
 
-const setGenderFromQueryStringParameters = (params: DynamoDB.DocumentClient.QueryInput, gender: string) => {
-  params.FilterExpression = '#gender = :gender'
-  params.ExpressionAttributeNames = {
-    '#gender': 'gender',
+const setGenderToQueryInputIfPresent = (params: DynamoDB.DocumentClient.QueryInput, gender: string): void => {
+  if (typeof gender === 'string') {
+    params.FilterExpression = '#gender = :gender'
+    params.ExpressionAttributeNames = {
+      '#gender': 'gender',
+    }
+    params.ExpressionAttributeValues = {
+      ':gender': gender
+    }
+
+    return
   }
-  params.ExpressionAttributeValues = {
-    ':gender': gender
-  }
+
+  delete params?.FilterExpression
+  delete params?.ExpressionAttributeNames
+  delete params?.ExpressionAttributeValues
 }
