@@ -3,7 +3,7 @@ import { DynamoDB } from 'aws-sdk'
 
 const docClient = new DynamoDB.DocumentClient()
 
-const params: DynamoDB.DocumentClient.QueryInput = { TableName: 'WORTERBUCH', ProjectionExpression: 'noun, article, gender' }
+const params: DynamoDB.DocumentClient.QueryInput = { TableName: 'WORTERBUCH' }
 
 export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const { queryStringParameters } = event
