@@ -13,7 +13,7 @@ Globals:
 
 Resources:
   ListNounsFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: list-nouns/built
       Handler: app.lambdaHandler
@@ -22,9 +22,27 @@ Resources:
         - x86_64
       Events:
         ListNouns:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /nouns
+            Method: get
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref NounsTable
+
+  GetNounFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: get-noun/built
+      Handler: app.lambdaHandler
+      Runtime: nodejs16.x
+      Architectures:
+        - x86_64
+      Events:
+        GetNoun:
+          Type: Api
+          Properties:
+            Path: /nouns/{noun}
             Method: get
       Policies:
         - DynamoDBReadPolicy:
@@ -36,10 +54,10 @@ Resources:
     Properties:
       TableName: WORTERBUCH
       AttributeDefinitions:
-        - AttributeName: id
+        - AttributeName: noun
           AttributeType: S
       KeySchema:
-        - AttributeName: id
+        - AttributeName: noun
           KeyType: HASH
       BillingMode: PROVISIONED
       ProvisionedThroughput:
@@ -59,6 +77,16 @@ Outputs:
   ListNounsFunctionIamRole:
     Description: "Implicit IAM Role created for List Nouns function"
     Value: !GetAtt ListNounsFunctionRole.Arn
+
+  GetNounApi:
+    Description: "API Gateway endpoint URL for Prod stage for Get Noun function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  GetNounFunction:
+    Description: "Get Noun Lambda Function ARN"
+    Value: !GetAtt GetNounFunction.Arn
+  GetNounFunctionIamRole:
+    Description: "Implicit IAM Role created for Get Noun function"
+    Value: !GetAtt GetNounFunctionRole.Arn
 
   DynamoDBTable:
     Description: "Table created to store the data related to Deutsch Worterbuch API"
