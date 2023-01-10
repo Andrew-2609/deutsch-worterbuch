@@ -1,16 +1,15 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { DynamoDB } from 'aws-sdk'
 
-const docClient = new DynamoDB.DocumentClient()
+export const docClient = new DynamoDB.DocumentClient()
 
 const params: DynamoDB.DocumentClient.QueryInput = { TableName: 'WORTERBUCH' }
 
 export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const { queryStringParameters } = event
-
-  setGenderToQueryInputIfPresent(params, queryStringParameters?.gender)
-
   try {
+    const { queryStringParameters } = event
+    setGenderToQueryInputIfPresent(params, queryStringParameters?.gender)
+
     const { Items } = await docClient.scan(params).promise()
     return {
       statusCode: 200,
@@ -25,7 +24,7 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
   }
 }
 
-const setGenderToQueryInputIfPresent = (params: DynamoDB.DocumentClient.QueryInput, gender: string): void => {
+export const setGenderToQueryInputIfPresent = (params: DynamoDB.DocumentClient.QueryInput, gender: string): void => {
   if (typeof gender === 'string') {
     params.FilterExpression = '#gender = :gender'
     params.ExpressionAttributeNames = {
