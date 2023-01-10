@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { DynamoDB } from 'aws-sdk'
 
-const docClient = new DynamoDB.DocumentClient()
+export const docClient = new DynamoDB.DocumentClient()
 
 const params: DynamoDB.DocumentClient.QueryInput = { TableName: 'WORTERBUCH' }
 
