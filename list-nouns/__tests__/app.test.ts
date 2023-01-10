@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent } from 'aws-lambda'
 import { DynamoDB } from 'aws-sdk'
-import event from '../../../events/event.json'
-import * as App from '../../handler/app'
+import event from '../../events/event.json'
+import * as App from '../handler/app'
 
 class FakeError extends Error {
   private readonly status: number
