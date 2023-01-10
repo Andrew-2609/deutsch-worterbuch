@@ -1,17 +1,19 @@
 {
   "compilerOptions": {
+    "esModuleInterop": true,
     "module": "CommonJS",
     "target": "ES2017",
     "noImplicitAny": true,
     "preserveConstEnums": true,
     "outDir": "./built",
-    "sourceMap": true
+    "sourceMap": true,
+    "resolveJsonModule": true
   },
   "include": [
+    "__tests__/**/*",
     "handler/**/*"
   ],
   "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
+    "node_modules"
   ]
 }
