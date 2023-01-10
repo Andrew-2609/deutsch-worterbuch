@@ -8,7 +8,7 @@ const params: DynamoDB.DocumentClient.QueryInput = { TableName: 'WORTERBUCH' }
 export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
     const { noun } = event.pathParameters
-    const { Item } = await docClient.get({ ...params, Key: { noun: noun } }).promise()
+    const { Item } = await docClient.get({ ...params, Key: { noun: decodeURI(noun) } }).promise()
 
     if (!Item) {
       return {
